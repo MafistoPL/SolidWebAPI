@@ -6,7 +6,14 @@ Console.WriteLine("Starting fetching data...");
 var dbTask = dbConnector.GetResultAsync();
 var wsTask = webServiceConnector.GetResultAsync();
 
-var results = await Task.WhenAll(dbTask, wsTask);
+var tasks = new List<Task<Result>>();
+for (int i = 0; i < 5; ++i)
+{
+    var task = webServiceConnector.GetResultAsync();
+    tasks.Add(task);
+}
+
+var results = await Task.WhenAll(tasks);
 
 Console.WriteLine("Fetching data completed");
 Console.WriteLine(results.Sum(x => x.Value));
