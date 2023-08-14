@@ -1,26 +1,19 @@
-﻿var dbConnector = new DbConnector();
-var webServiceConnector = new WebServiceConnector();
+﻿var service = new DataService();
+var result = await service.GetDataAsync();
 
-Console.WriteLine("Starting fetching data...");
-
-var dbTask = dbConnector.GetResultAsync();
-var wsTask = webServiceConnector.GetResultAsync();
-
-var tasks = new List<Task<Result>>();
-for (int i = 0; i < 5; ++i)
-{
-    var task = webServiceConnector.GetResultAsync();
-    tasks.Add(task);
-}
-
-var results = await Task.WhenAll(tasks);
-
-Console.WriteLine("Fetching data completed");
-Console.WriteLine(results.Sum(x => x.Value));
+Console.WriteLine(result);
 
 // C# 1.0 Begin/Invoke
 // C# events: += args => { ... }
 // C# async/await
+
+public class DataService
+{
+    private readonly WebServiceConnector _wsConnector = new();
+
+    public Task<Result> GetDataAsync()
+        => _wsConnector.GetResultAsync();
+}
 
 public class DbConnector
 {
