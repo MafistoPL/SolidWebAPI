@@ -3,8 +3,10 @@ var webServiceConnector = new WebServiceConnector();
 
 Console.WriteLine("Starting fetching data...");
 
-var dbResult = dbConnector.GetResult();
-var webServiceResult = webServiceConnector.GetResult();
+var dbTask = dbConnector.GetResultAsync();
+var webServiceResult = await webServiceConnector.GetResultAsync();
+
+var dbResult = await dbTask;
 
 Console.WriteLine("Fetching data completed");
 
@@ -16,10 +18,10 @@ Console.WriteLine(dbResult.Value + webServiceResult.Value);
 
 public class DbConnector
 {
-    public Result GetResult()
+    public async Task<Result> GetResultAsync()
     {
         Console.WriteLine("Starting processing DB...");
-        Thread.Sleep(2_000);
+        await Task.Delay(5_000);
         Console.WriteLine("Finished processing DB...");
 
         return new Result(1);
@@ -28,11 +30,11 @@ public class DbConnector
 
 public class WebServiceConnector
 {
-    public Result GetResult()
+    public async Task<Result> GetResultAsync()
     {
         Console.WriteLine("Starting processing WS...");
-        Thread.Sleep(300);
-        Console.WriteLine("Starting processing WS...");
+        Thread.Sleep(3_000);
+        Console.WriteLine("Finished processing WS...");
 
         return new Result(3);
     }
