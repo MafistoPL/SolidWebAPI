@@ -4,13 +4,12 @@ var webServiceConnector = new WebServiceConnector();
 Console.WriteLine("Starting fetching data...");
 
 var dbTask = dbConnector.GetResultAsync();
-var webServiceResult = await webServiceConnector.GetResultAsync();
+var wsTask = webServiceConnector.GetResultAsync();
 
-var dbResult = await dbTask;
+var results = await Task.WhenAll(dbTask, wsTask);
 
 Console.WriteLine("Fetching data completed");
-
-Console.WriteLine(dbResult.Value + webServiceResult.Value);
+Console.WriteLine(results.Sum(x => x.Value));
 
 // C# 1.0 Begin/Invoke
 // C# events: += args => { ... }
